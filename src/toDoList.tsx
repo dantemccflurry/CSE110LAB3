@@ -14,24 +14,23 @@ export function ToDoList() {
  let [items, setItems] = useState(dummyGroceryList);
 
  function handleCheckboxClick(e: React.ChangeEvent<HTMLInputElement>) {
-   const checkbox: HTMLInputElement = e.target as HTMLInputElement;
+  const checkbox: HTMLInputElement = e.target;
+  const itemName = checkbox.name;
 
-   const itemName = checkbox.name;
+  const itemIndex = items.findIndex((item) => item.name === itemName);
 
-   const itemIndex = items.findIndex((item) => item.name === itemName);
-   items[itemIndex] = { name: itemName, isPurchased: checkbox.checked };
+  const newItems = items.map((item, index) =>
+    index === itemIndex
+      ? { ...item, isPurchased: checkbox.checked }
+      : item
+  );
 
-   const uncheckedItems = items.filter((item) => !item.isPurchased);
-   const checkedItems = items.filter((item) => item.isPurchased);
+  const checkedItems = newItems.filter((item) => item.isPurchased).length;
 
-   const newItems = uncheckedItems.concat(checkedItems);
+  setItems(newItems);
+  setNumRemainingItems(checkedItems);
+}
 
-   setItems(newItems);
-
-   const diff = checkbox.checked ? 1 : -1;
-
-   setNumRemainingItems(numRemainingItems + diff);
- }
 
  return (
    <div className="App">
@@ -53,8 +52,9 @@ function ListItem(item: GroceryItem, changeHandler: ChangeEventHandler) {
        onChange={changeHandler}
        checked={item.isPurchased}
        name={item.name}
+       id={item.name}
      />
-     {item.name}
+     <label htmlFor={item.name}>{item.name}</label>
    </div>
  );
 }
