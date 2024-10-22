@@ -50,7 +50,7 @@ export const StickyNotes =()=>{
        function Favorited({isClicked,handleClick}:FavoritedProp){
       
         return(
-           <div><button onClick={handleClick} style={{ background: currentTheme.background,color: currentTheme.foreground}}>{isClicked ? <FaHeart color='red'/>:<CiHeart />}</button></div>
+           <div><button data-testid="favButton" onClick={handleClick} style={{ background: currentTheme.background,color: currentTheme.foreground}}>{isClicked ? <FaHeart color='red'/>:<CiHeart />}</button></div>
       
         );
       };

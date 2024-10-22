@@ -108,7 +108,7 @@ test("creates a new note", () => {
 });
 
 
-//Test for Toggle Theme
+//Test 5 for Toggle Theme
 describe("Note Added and Editied",()=>{
   test("Turn to Dark Mode and Back to Light Mode",()=>{
       render (<StickyNotes/>);
@@ -123,7 +123,7 @@ describe("Note Added and Editied",()=>{
   });
 });
 
-//Test for Deleting Note
+//Test 5 for Deleting Note
 describe("Create and Delete a Note",()=>{
   test("Deleteing Note",()=>{
      render(<StickyNotes/>);
@@ -135,5 +135,101 @@ describe("Create and Delete a Note",()=>{
       expect(notetitle1).not.toBeInTheDocument();
       const newNotesLength=screen.getAllByTestId("note-grid");
       expect(newNotesLength).toHaveLength(5);
+  });
+});
+
+// Test 6 for changing title, content, and label
+describe("Edit Note Title and Content", () => {
+  test("Changes the note title", () => {
+    render(<StickyNotes/>);
+
+    const noteTitle = screen.getByText("test note 1 title");
+    expect(noteTitle).toBeInTheDocument();
+
+    fireEvent.focus(noteTitle);
+    fireEvent.change(noteTitle, { target: { innerHTML: "Title 1 Changed" } });
+    fireEvent.blur(noteTitle);
+
+    const updatedTitle = screen.getByText("Title 1 Changed");
+    expect(updatedTitle).toBeInTheDocument();
+  });
+  test("Changes the note content", () => {
+    render(<StickyNotes/>);
+
+    const noteContent = screen.getByText("test note 1 content");
+    expect(noteContent).toBeInTheDocument();
+
+    fireEvent.focus(noteContent);
+    fireEvent.change(noteContent, { target: { innerHTML: "Content 1 Changed" } });
+    fireEvent.blur(noteContent);
+
+    const updatedContent = screen.getByText("Content 1 Changed");
+    expect(updatedContent).toBeInTheDocument();
+  });
+});
+
+// Test 7 for favorites
+describe("Toggle Favorite functionality", () => {
+  test("Favoriting and unfavoriting a note", () => {
+    render(<StickyNotes />);
+
+    const notesLength=screen.getAllByTestId("note-grid");
+    const notetitle1=screen.getByText('test note 1 title');
+    expect(notetitle1).toBeInTheDocument();
+    expect(notesLength).toHaveLength(6);
+
+    const favoriteButton=screen.getAllByTestId("favButton");
+    fireEvent.click(favoriteButton[0]);
+  
+    const favoriteNotesLabel = screen.getByText("Favorited Notes:");
+    expect(favoriteNotesLabel).toBeInTheDocument();
+
+    const note1Favorited = screen.getAllByText("test note 1 title")
+    expect(note1Favorited).toHaveLength(2);
+
+    const favoriteButton1=screen.getAllByTestId("favButton");
+    fireEvent.click(favoriteButton1[0]);
+    const newFavorited = screen.getAllByText("test note 1 title")
+    expect(newFavorited).toHaveLength(1);
+  });
+});
+
+// Test 8 delete all notes
+describe("Delete all notes", () => {
+  test("delete all notes", () => {
+    render(<StickyNotes />);
+
+      const notesLength=screen.getAllByTestId("note-grid");
+      const notetitle1=screen.getByText('test note 1 title');
+      expect(notesLength).toHaveLength(6);
+      const deleteButton1=screen.getAllByText('x');
+      fireEvent.click(deleteButton1[0]);
+      expect(notetitle1).not.toBeInTheDocument();
+      const newNotesLength=screen.getAllByTestId("note-grid");
+      expect(newNotesLength).toHaveLength(5);
+
+      const notesLengthNew=screen.getAllByTestId("note-grid");
+
+      expect(notesLengthNew).toHaveLength(5);
+
+
+      const deleteButton2=screen.getAllByText('x');
+      fireEvent.click(deleteButton2[0]);
+      const deleteButton3=screen.getAllByText('x');
+      fireEvent.click(deleteButton3[0]);
+      const deleteButton4=screen.getAllByText('x');
+      fireEvent.click(deleteButton4[0]);
+      const deleteButton5=screen.getAllByText('x');
+      fireEvent.click(deleteButton5[0]);
+      const deleteButton6=screen.getAllByText('x');
+      fireEvent.click(deleteButton6[0]);
+      
+      const testNote = screen.queryByText('test note');
+      expect(testNote).toBeNull();
+
+      const deleteButton = screen.queryByText('x');
+      expect(deleteButton).toBeNull();
+
+
   });
 });
